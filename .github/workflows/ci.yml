@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  
+jobs:
+  build:
+    name: Build Firmware
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Build firmware
+        run: pio run --environment m5stick-c
+        env:
+          D_WIFI_SSID: ${{ secrets.WIFI_SSID }}
+          D_WIFI_PASS: ${{ secrets.WIFI_PASS }}
+          D_WIFI_USER: ${{ secrets.WIFI_USER }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload firmware binary
+        uses: actions/upload-artifact@v4 
+        with:
+          name: firmware-m5stick
+          path: |
+            .pio/build/m5stick-c/firmware.bin
+            .pio/build/m5stick-c/partitions.bin
