@@ -12,6 +12,8 @@
 #include "HTTPClient.h"
 #include "Update.h"
 
+#define FIRMWARE_VERSION "1.0.0"
+
 // WiFi and GitHub credentials handling:
 // - GitHub Actions: Uses temporary header file (include/wifi_config.h) with secrets injected at build time
 // - Local development: Uses environment variables via platformio.ini build_flags
@@ -21,6 +23,15 @@
   #include "wifi_config.h"
 #else
   // Local development: Use environment variables passed via build_flags
+
+  #ifndef GITHUB_TOKEN
+  #define GITHUB_TOKEN ""
+  #endif
+
+  #ifndef D_WIFI_USER
+  #define D_WIFI_USER ""
+  #endif
+
   #ifndef D_WIFI_SSID
   #define D_WIFI_SSID ""
   #endif
@@ -28,22 +39,15 @@
   #ifndef D_WIFI_PASS
   #define D_WIFI_PASS ""
   #endif
-
-  #ifndef D_WIFI_USER
-  #define D_WIFI_USER ""
-  #endif
   
-  #ifndef GITHUB_TOKEN
-  #define GITHUB_TOKEN ""
-  #endif
 #endif
 
 #define D_WIFI_IDENTITY D_WIFI_USER
-
-#define FIRMWARE_VERSION "1.0.0"
 #define BITCOIN_PRICE_ENDPOINT "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
-#define GITHUB_REPO "giacomobenedetti/test-it"
+#define AWS_ACCESS_TOKEN "AKIALALEMEL33243OLIA"
 #define GITHUB_API_ENDPOINT "https://api.github.com/repos/giacomobenedetti/test-it/releases/latest"
+#define GITHUB_REPO "giacomobenedetti/test-it"
+
 
 static uint32_t g_bitcoinPriceUsd = 0;
 static uint32_t g_lastBitcoinCheckMs = 0;
